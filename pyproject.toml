@@ -23,4 +23,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.12.3"
 pre-commit = "^4.2.0"
+mypy = "^1.16.1"
+django-stubs = "^5.2.1"
 
+[[tool.mypy.overrides]]
+module = ["environ.*"]
+follow_untyped_imports = true
