@@ -1,6 +1,7 @@
 services:
  db:
    image: postgres:17
+   container_name: booking_postgres
    environment:
      POSTGRES_DB: ${DATABASE_NAME}
      POSTGRES_USER: ${DATABASE_USERNAME}
@@ -16,7 +17,7 @@ services:
    build: .
    volumes:
      - .:/app
-   container_name: django-docker
+   container_name: booking_django
    restart: unless-stopped
    ports:
      - "8000:8000"
