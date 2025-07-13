@@ -13,7 +13,7 @@ environ.Env.read_env(BASE_DIR.parent / ".env")
 SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env('DEBUG')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,23 +55,16 @@ WSGI_APPLICATION = 'booking_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.{}'.format(
+            env('DATABASE_ENGINE', default='sqlite3')
+        ),
+        'NAME': env('DATABASE_NAME', default='booking_service'),
+        'USER': env('DATABASE_USERNAME', default='root'),
+        'PASSWORD': env('DATABASE_PASSWORD', default='password'),
+        'HOST': env('DATABASE_HOST', default='127.0.0.1'),
+        'PORT': env('DATABASE_PORT', default=5432),
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.{}'.format(
-#             env('DATABASE_ENGINE', default='sqlite3')
-#         ),
-#         'NAME': env('DATABASE_NAME', default='booking_service'),
-#         'USER': env('DATABASE_USERNAME', default='root'),
-#         'PASSWORD': env('DATABASE_PASSWORD', default='password'),
-#         'HOST': env('DATABASE_HOST', default='127.0.0.1'),
-#         'PORT': env('DATABASE_PORT', default=5432),
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
