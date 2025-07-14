@@ -26,6 +26,13 @@ pre-commit = "^4.2.0"
 mypy = "^1.16.1"
 django-stubs = "^5.2.1"
 
+
 [[tool.mypy.overrides]]
 module = ["environ.*"]
 follow_untyped_imports = true
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "booking_service.settings"
