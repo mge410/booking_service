@@ -12,8 +12,17 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install mypy
-        run: pip install mypy
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: |
+          poetry install --no-root --with dev --sync
 
       - name: Run mypy
-        run: mypy . --ignore-missing-imports
+        run: |
+          cd booking_service
+          poetry run mypy . --ignore-missing-imports
