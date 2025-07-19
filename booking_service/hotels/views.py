@@ -29,10 +29,7 @@ class RoomViewSet(BaseCreateDeleteViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = [
-        Room.price.field.name,
-        Room.created_at.field.name
-    ]
+    ordering_fields = [Room.price.field.name, Room.created_at.field.name]
     ordering = [f"-{Room.created_at.field.name}"]
 
 
@@ -43,10 +40,14 @@ class BookingViewSet(BaseCreateDeleteViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        room_id = self.request.query_params.get('room') or self.request.query_params.get('room_id')
+        room_id = self.request.query_params.get(
+            "room"
+        ) or self.request.query_params.get("room_id")
 
         if not room_id:
-            raise serializers.ValidationError("Room parameter (room or room_id) is required")
+            raise serializers.ValidationError(
+                "Room parameter (room or room_id) is required"
+            )
 
         try:
             get_object_or_404(Room, id=int(room_id))
