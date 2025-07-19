@@ -1,19 +1,20 @@
 from django.contrib import admin
-import hotels.models
+from hotels.models import Room, Booking
 
 
-@admin.register(hotels.models.Hotel)
+@admin.register(Room)
 class HotelAdmin(admin.ModelAdmin):
     list_display = (
-        hotels.models.Hotel.title.field.name,
-        hotels.models.Hotel.text.field.name,
+        Room.description.field.name,
+        Room.price.field.name,
+        Room.created_at.field.name,
     )
 
 
-@admin.register(hotels.models.Booking)
+@admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = (
-        hotels.models.Booking.hotel.field.name,
-        hotels.models.Booking.start_date.field.name,
-        hotels.models.Booking.end_date.field.name,
+        Booking.room.field.name,
+        Booking.start_date.field.name,
+        Booking.end_date.field.name,
     )

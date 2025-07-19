@@ -1,20 +1,25 @@
 from django.db import models
+from django.utils import timezone
 
 
-class Hotel(models.Model):
-    title = models.CharField(max_length=100)
-    text = models.TextField("description")
+class Room(models.Model):
+    description = models.TextField("description", db_column="description")
     price = models.DecimalField(
         "price",
         decimal_places=2,
         max_digits=6,
-        help_text="price per night at the hotel in dollars",
+        help_text="price per night at the room in dollars",
+    )
+    created_at = models.DateTimeField(
+        "date of creation",
+        default=timezone.now,
+        help_text="Date of creation",
     )
 
 
 class Booking(models.Model):
-    hotel = models.ForeignKey(
-        Hotel,
+    room = models.ForeignKey(
+        Room,
         on_delete=models.CASCADE,
     )
     start_date = models.DateField("booking start date")

@@ -1,7 +1,9 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
+import hotels.urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path("hotel/", django.urls.include("hotels.urls")),
+    path("", include(hotels.urls)),
 ]
