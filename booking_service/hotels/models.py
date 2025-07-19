@@ -3,6 +3,7 @@ from django.utils import timezone
 
 
 class Room(models.Model):
+    objects = models.Manager()
     description = models.TextField("description", db_column="description")
     price = models.DecimalField(
         "price",
