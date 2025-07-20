@@ -13,6 +13,20 @@ services:
    env_file:
      - .env
 
+ test-db:
+   image: postgres:17
+   container_name: booking_test_postgres
+   environment:
+     POSTGRES_DB: ${DATABASE_NAME}
+     POSTGRES_USER: ${DATABASE_USERNAME}
+     POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+   ports:
+     - "5433:5432"
+   volumes:
+     - postgres_test_data:/var/lib/postgresql/data
+   env_file:
+     - .env.testing
+
  django-web:
    build: .
    volumes:
@@ -37,5 +51,7 @@ services:
      DATABASE_PORT: ${DATABASE_PORT}
    env_file:
      - .env
+
 volumes:
    postgres_data:
+   postgres_test_data:

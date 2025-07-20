@@ -38,21 +38,14 @@ class BookingViewSet(BaseCreateDeleteViewSet):
     serializer_class = BookingSerializer
     ordering = [Booking.start_date.field.name]
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        room_id = self.request.query_params.get(
-            "room"
-        ) or self.request.query_params.get("room_id")
-
+    def list(self, request, *args, **kwargs):
+        room_id = request.query_params.get("room") or request.query_params.get("room_id")
         if not room_id:
-            raise serializers.ValidationError(
-                "Room parameter (room or room_id) is required"
-            )
+            raise serializers.ValidationError("Room parameter (room or room_id) is required")
 
         try:
             get_object_or_404(Room, id=int(room_id))
-            return queryset.filter(room_id=room_id)
+            self.queryset = self.queryset.filter(room_id=room_id)
+            return super().list(request, *args, **kwargs)
         except ValueError:
-            raise serializers.ValidationError(
-                {"room": "Room ID must be a valid integer"}
-            )
+            raise serializers.ValidationError({"room": "Room ID must be a valid integer"})
