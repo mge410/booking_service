@@ -29,6 +29,7 @@ services:
 
  django-web:
    build: .
+   command: gunicorn booking_service.wsgi:application --bind 0.0.0.0:8000 --reload
    volumes:
      - .:/app
    container_name: booking_django
