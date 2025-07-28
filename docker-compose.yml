@@ -13,7 +13,7 @@ services:
    env_file:
      - .env
 
- test-db:
+ test_db:
    image: postgres:17
    container_name: booking_test_postgres
    environment:
@@ -38,20 +38,7 @@ services:
      - "8000:8000"
    depends_on:
      - db
-   environment:
-     SECRET_KEY: ${SECRET_KEY}
-     DEBUG: ${DEBUG}
-     LOGLEVEL: ${LOGLEVEL}
-     ALLOWED_HOSTS: ${ALLOWED_HOSTS}
-     DATABASE_ENGINE: ${DATABASE_ENGINE}
-     DATABASE_NAME: ${DATABASE_NAME}
-     DATABASE_USERNAME: ${DATABASE_USERNAME}
-
-     DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-     DATABASE_HOST: ${DATABASE_HOST}
-     DATABASE_PORT: ${DATABASE_PORT}
-   env_file:
-     - .env
+     - test_db
 
 volumes:
    postgres_data:
