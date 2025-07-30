@@ -6,26 +6,33 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            Room.id.field.name,
-            Room.description.field.name,
-            Room.price.field.name,
+            "id",
+            "description",
+            "price",
         ]
-
-    def create(self, validated_data: dict) -> Room:
-        return Room.objects.create(**validated_data)
 
 
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = [
-            Room.id.field.name,
-            Booking.room.field.name,
-            Booking.start_date.field.name,
-            Booking.end_date.field.name,
+            "id",
+            "room",
+            "start_date",
+            "end_date",
         ]
 
     def validate(self, data: dict) -> dict:
         if data["end_date"] <= data["start_date"]:
             raise serializers.ValidationError("End date must be after start date")
+
+        if Booking.objects.filter(
+            room=data["room"],
+            start_date__lt=data["end_date"],
+            end_date__gt=data["start_date"],
+        ).exists():
+            raise serializers.ValidationError(
+                "This room is already booked for the selected dates"
+            )
+
         return data

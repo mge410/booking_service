@@ -76,7 +76,7 @@ class TestBookingEndpoints:
         response = client.get(url)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "Room parameter (room or room_id) is required" in str(response.data)
+        assert "Room parameter room is required" in str(response.data)
 
     def test_list_bookings_with_room_param(self, client, room, booking):
         url = reverse("booking-list")

@@ -1,6 +1,7 @@
 services:
  db:
    image: postgres:17
+   container_name: booking_postgres
    environment:
      POSTGRES_DB: ${DATABASE_NAME}
      POSTGRES_USER: ${DATABASE_USERNAME}
@@ -11,17 +12,23 @@ services:
      - postgres_data:/var/lib/postgresql/data
    env_file:
      - .env
+   healthcheck:
+     test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+     interval: 5s
+     timeout: 5s
+     retries: 5
 
  django-web:
    build: .
    command: gunicorn booking_service.wsgi:application --bind 0.0.0.0:8000 --workers 4 --threads 2
    volumes:
      - .:/app
-   container_name: django-docker
+   container_name: booking_django
    ports:
      - "8000:8000"
    depends_on:
-     - db
+     db:
+       condition: service_healthy
    environment:
      SECRET_KEY: ${SECRET_KEY}
      DEBUG: ${DEBUG}
@@ -30,11 +37,16 @@ services:
      DATABASE_ENGINE: ${DATABASE_ENGINE}
      DATABASE_NAME: ${DATABASE_NAME}
      DATABASE_USERNAME: ${DATABASE_USERNAME}
-
      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
      DATABASE_HOST: ${DATABASE_HOST}
      DATABASE_PORT: ${DATABASE_PORT}
    env_file:
      - .env
+   healthcheck:
+     test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]  # Замените на ваш эндпоинт
+     interval: 30s
+     timeout: 10s
+     retries: 3
+
 volumes:
    postgres_data:
