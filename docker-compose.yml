@@ -1,0 +1,45 @@
+services:
+ db:
+   image: postgres:17
+   container_name: booking_postgres
+   environment:
+     POSTGRES_DB: ${DATABASE_NAME}
+     POSTGRES_USER: ${DATABASE_USERNAME}
+     POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+   ports:
+     - "5432:5432"
+   volumes:
+     - postgres_data:/var/lib/postgresql/data
+   env_file:
+     - .env
+
+ test_db:
+   image: postgres:17
+   container_name: booking_test_postgres
+   environment:
+     POSTGRES_DB: ${DATABASE_NAME}
+     POSTGRES_USER: ${DATABASE_USERNAME}
+     POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+   ports:
+     - "5433:5432"
+   volumes:
+     - postgres_test_data:/var/lib/postgresql/data
+   env_file:
+     - .env.testing
+
+ django-web:
+   build: .
+   command: gunicorn booking_service.wsgi:application --bind 0.0.0.0:8000 --reload
+   volumes:
+     - .:/app
+   container_name: booking_django
+   restart: unless-stopped
+   ports:
+     - "8000:8000"
+   depends_on:
+     - db
+     - test_db
+
+volumes:
+   postgres_data:
+   postgres_test_data:
